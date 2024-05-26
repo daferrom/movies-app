@@ -1,8 +1,11 @@
 import React from 'react'
 import Link from 'next/link'
 import { LogoutForm } from './LogoutForm'
+import { getSession } from '../actions'
 
-const NavBar = () => {
+const NavBar = async () => {
+  const session = await getSession();
+  console.log(session)
   return (
     <nav>
         <Link href='/'>Homepage</Link>
