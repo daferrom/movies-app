@@ -10,7 +10,7 @@ const NavBar = async () => {
     <nav>
         <Link href='/'>Homepage</Link>
         <Link href='/Login'>Login</Link>
-        <LogoutForm/>
+        {session.isLoggedIn && <LogoutForm/>}
     </nav>
   )
 }
