@@ -126,7 +126,7 @@ ul {
 
 li {
   font-size: 20px;
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
   cursor: pointer;
   transition: all 0.4s ease;
 }

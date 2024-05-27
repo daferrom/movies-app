@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './styles/MovieCard.module.css'
 import { Image } from 'react-bootstrap';
+import NotAvailablePoster from '../../../../../public/no-poster-available.jpg'
 
 
 export const MovieCard = ({title, description, year, genres=[], imgSrc}) => {
@@ -24,22 +25,22 @@ export const MovieCard = ({title, description, year, genres=[], imgSrc}) => {
   return (
     <div className={styles.cardContainer}>
         <div className={styles.imageContainer}>
-          <Image src={imgSrc} alt="movie image"/>
+      <Image src={imgSrc} alt={`movie image of ${title}`}/>
         </div>
         
         <div className={styles.infoContainer}>
             <h2 className={styles.title}>{title}</h2>
             <h3>Year: {year}</h3>
             {/* <p className={styles.description}>{description}</p> */}
-              <p className={styles.genres}>
+              <div className={styles.genres}>
                 Genres:
                 <ul className={styles.genres}>
                   {genres.map((genre)=>(
                   <span className={styles.description}
                     key={Math.random()}
-                  >{genre}, </span>))}
+                  >{genre} </span>))}
                 </ul>
-              </p>
+              </div>
               
             
         </div>
