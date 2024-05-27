@@ -1,26 +1,25 @@
+import { useState, useEffect } from 'react';
 import React from 'react'
 import styles from './styles/MovieCard.module.css'
 import { Image } from 'react-bootstrap';
 import NotAvailablePoster from '../../../../../public/no-poster-available.jpg'
 
 
-export const MovieCard = ({title, description, year, genres=[], imgSrc}) => {
-  // const mockData = {
-  //   rank: 1,
-  //   // title: "The Shawshank Redemption",
-  //   // description: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
-  //   image: "http://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-  //   big_image: "http://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@",
-  //   genre: [
-  //       "Drama"
-  //   ],
-  //   thumbnail: "http://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg",
-  //   rating: "9.3",
-  //   id: "top1",
-  //   year: 1994,
-  //   imdbid: "tt0111161",
-  //   imdb_link: "https://www.imdb.com/title/tt0111161"
-  // }
+export const MovieCard = ({title, id, description, year, genres=[], imgSrc}) => {
+  const [isFavorite, setIsFavorite] = useState(localStorage.getItem(id) === 'true');
+  
+  useEffect(() => {
+    // load favorites when capp initializes
+    const storedFavorite = localStorage.getItem(id);
+    setIsFavorite(storedFavorite === 'true');
+  }, [id]);
+
+  const toggleFavorite = () =>{
+    const newIsFavorite = !isFavorite;
+    setIsFavorite(newIsFavorite);
+    localStorage.setItem(id, newIsFavorite); // Guardar el estado en localStorage
+  };
+  
   
   return (
     <div className={styles.cardContainer}>
@@ -38,12 +37,16 @@ export const MovieCard = ({title, description, year, genres=[], imgSrc}) => {
                   {genres.map((genre)=>(
                   <span className={styles.description}
                     key={Math.random()}
-                  >{genre} </span>))}
+                  > {genre} |</span>))}
                 </ul>
               </div>
-              
-            
         </div>
+        <div className={styles.btnsContainer}>
+          <button onClick={toggleFavorite}>
+            {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+          </button>
+        </div>
+
     </div>
   )
 }

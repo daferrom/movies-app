@@ -1,3 +1,4 @@
+
 import { getSession } from '../../app/actions'
 import ScrollInfiniteList from '../components/clientComponents/ScrollInfiniteList';
 // import InfiniteScroll from 'react-infinite-scroll-component';
@@ -28,6 +29,8 @@ const Home = async () => {
 //     },
 //   };
 // };
+
+// }
 
 export default Home
 

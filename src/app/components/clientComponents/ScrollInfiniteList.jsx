@@ -1,80 +1,97 @@
 "use client"
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { MovieCard } from './movieCard/MovieCard';
-import mockDataMovies from '../../../../public/mockDataMovies.json'
 
 
-const options = {
-  method: 'GET',
-  url: 'https://imdb-top-100-movies.p.rapidapi.com/',
-  headers: {
-    'x-rapidapi-key': 'bbf07d3af0mshbf83338a42ab25fp1ac141jsn3bb9e8cbdce3',
-    'x-rapidapi-host': 'imdb-top-100-movies.p.rapidapi.com'
+// const options = {
+//   method: 'GET',
+//   url: 'https://imdb-top-100-movies.p.rapidapi.com/',
+//   headers: {
+//     'x-rapidapi-key': 'bbf07d3af0mshbf83338a42ab25fp1ac141jsn3bb9e8cbdce3',
+//     'x-rapidapi-host': 'imdb-top-100-movies.p.rapidapi.com'
+//   }
+// };
+
+async function fetchMovies(page) {
+  console.log("fetched movies executes")
+  const res = await fetch(`/api/movies?page=${page}`);
+  if (!res.ok) {
+    throw new Error('Error fetching movies');
   }
-};
+  return res.json();
+}
 
-const ScrollInfiniteList = ({ initialItems, initialPage }) => {
-  const [items, setItems] = useState([]);
+const ScrollInfiniteList = () => {
 
+  const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  // fetching initial elements //
   useEffect(() => {
-    // initial call when the component has been mounted
-    fetchData();
+    const loadInitialMovies = async () => {
+      try {
+        const data = await fetchMovies(1);
+        setMovies(data.movies);
+        setPage(1);
+        setHasMore(1 < data.totalPages);
+      } catch (error) {
+        console.error('Error loading initial movies:', error);
+      }
+    };
+    loadInitialMovies();
   }, []);
 
-  const fetchData = async () => {
-    // setLoading(true);
-    try {
-      // const response = await axios.request(options);
-      // const response = await fetch('../../../../public/mockDataMovies.json')
-      const response = {
-        data: mockDataMovies
-      };
-      console.log("response", response)
-      const {data} = response
-      console.log("data", data)
-      setItems(data)
-      // setData(response.data);
-      // setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      // setLoading(false);
+  // fetch more elements //
+  const loadMore = useCallback(async () => {
+    if (!hasMore) {
+      return;
     }
-  };
+    const nextPage = page + 1;
+    try {
+      const newMovies = await fetchMovies(nextPage);
+      setMovies((prevMovies) => [...prevMovies, ...newMovies.movies]);
+      setPage(nextPage);
+      setHasMore(nextPage < newMovies.totalPages);
+    } catch (error) {
+      console.error('Error loading more movies:', error);
+    }
+  }, [page, hasMore]);
 
 
-    // const fetchItems = async () => {
-    //     try {
-    //       const response = await axios.request(options);
-    //       console.log(response.data);
-    //       const newItems = response.data;
-    
-    //     //   if (newItems.length > 0) {
-    //     //     setItems((prevItems) => [...prevItems, ...newItems]);
-    //     //     setPage(page + 1);
-    //     //   } else {
-    //     //     // setHasMore(false);
-    //     //   }
-    //     } catch (error) {
-    //       console.error('Error fetching items:', error);
-    //     //   setHasMore(false);
-    //     }
-    // }
+  const handleScroll = useCallback(() => {
+    console.log("document.documentElement.scrollTop", document.documentElement.scrollTop)
+    console.log("document.documentElement.offsetHeight",document.body.offsetHeight)
+    console.log("window.innerHeight",window.innerHeight)
+    if (
+      document.documentElement.scrollTop >= (window.innerHeight * page * 2)
+    ) {
+      loadMore();
+    }
+  }, [loadMore]);
+  
+  // scroll & fetch handling //
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   return (
     <div>
      <h1>Movies List</h1>  
      <ul>
-        {items.map((item) => (
-          <li key={item.title + Math.random()}>
-              <MovieCard 
-                title={item.title}
-                description={item.extract}
-                year={item.year}
-                genres={item.genres}
-                imgSrc={item.thumbnail}
+        {movies.map((movie, index) => (
+          <li key={index}>
+              <MovieCard
+                id={index}
+                title={movie.title}
+                description={movie.extract}
+                year={movie.year}
+                genres={movie.genres}
+                imgSrc={movie.thumbnail}
               />
           </li>
           
@@ -105,16 +122,15 @@ const ScrollInfiniteList = ({ initialItems, initialPage }) => {
 
 }
 
-export const getServerSideProps = async () => {
-    const response = await axios.request(options);
-    const initialItems = response.data;
-  
-    return {
-      props: {
-        initialItems,
-        initialPage: 2,
-      },
-    };
+export async function getServerSideProps() {
+  console.log("getServerSidePropds")
+  const data = await fetchMovies(1);
+  return {
+    props: {
+      initialMovies: data.movies,
+      initialPage: 1,
+      totalPages: data.totalPages,
+    },
   };
-
+}
 export default ScrollInfiniteList;
