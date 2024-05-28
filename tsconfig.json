@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/app/MovieDetailPage/[id]/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]

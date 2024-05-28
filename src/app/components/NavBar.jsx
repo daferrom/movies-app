@@ -8,8 +8,8 @@ const NavBar = async () => {
   console.log(session)
   return (
     <nav>
-        {/* <Link href='/'>LandingPage</Link>
-        <Link href='/Home'>Home</Link> */}
+        {/* <Link href='/'>LandingPage</Link> */}
+        {session.isLoggedIn && <Link href='/Home'>Home</Link>}
         <Link href='/Login'>Login</Link>
         {session.isLoggedIn && <LogoutForm/>}
     </nav>

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers"
 
 let useremail = "diegoferro@57blocks.com"
-let userpassword = "iegoferro@57blocks.com"
+let userpassword = "diegoferro@57blocks.com"
 let isPro = true
 
 export const getSession = async () => {
@@ -24,7 +24,6 @@ export const getSession = async () => {
 export const login = async (prevState:{error:undefined | string}, formData:FormData) => {
     const session = await getSession()
 
-    // const formUsername = formData.get("username") as string
     const formUserEmail = formData.get("useremail") as string
     const formPassword = formData.get("password") as string
 
@@ -33,25 +32,17 @@ export const login = async (prevState:{error:undefined | string}, formData:FormD
     // const user = await.db.getUser({username, password})
 
     // handling of wrong credentials on input
-    // if(formUsername !== username){
-    //     return {error:"Wrong Credentials!"}
-    // }
-
-
     if((formUserEmail !== useremail) && (formPassword !== userpassword)){
-
         return {error:"Wrong Credentials!"}
     }
 
     session.userId= "1";
-    // session.username = formUsername;
     session.userEmail = formUserEmail
     session.isPro = isPro;
     session.isLoggedIn = true;
     
     await session.save();
     redirect("/Home", );
-    // router.push('/')
 }
 export const logout = async () => {
     const session = await getSession()

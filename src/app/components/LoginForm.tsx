@@ -9,12 +9,13 @@ const LoginForm = () => {
   const [state, formAction] = useFormState<any,FormData>(login, undefined)
     
   return (
-    <form action={formAction}>
+    <form className="login" action={formAction}>
+        <label className="form-label">Email:</label>
         <input 
             type="email" 
             name="useremail"
             required
-            placeholder="useremail"
+            placeholder="email"
         />
 
         {/* <input 
@@ -23,7 +24,7 @@ const LoginForm = () => {
             required
             placeholder="username"
         /> */}
-
+        <label className="form-label">Password:</label>
         <input 
             type="password" 
             name="password"
@@ -31,7 +32,7 @@ const LoginForm = () => {
             placeholder="password"
         />
 
-        <button>Login</button>
+        <button className="btn-login">Login</button>
         {state?.error && <p>{state.error}</p>}
     </form>
   )

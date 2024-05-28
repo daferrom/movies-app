@@ -1,0 +1,46 @@
+.pageContainer {
+    font-size: 20px;
+    font-weight: 300px;
+}
+
+.title {
+    justify-content: center;
+    font-weight: bold;
+}
+.sectionContainer{
+    display: flex; 
+    padding: 16px; 
+    justify-content: space-around;
+}
+
+.description {
+    padding: 0px 10%;
+}
+
+.imageContainer{
+    display: flex;
+    align-self: center;
+    justify-content: space-evenly;
+    width: 50%;
+
+}
+.contentContainer{
+    align-self: center;
+    width: 50%;
+}
+
+.detailInfo{
+    font-weight: bold;
+}
+
+.image{
+    min-width: 220px;
+    min-height: 398px;
+}
+
+.link {
+    color: white;
+    /* border: 1px solid blue; */
+    padding: 5px;
+    border-radius: 5px;
+}
